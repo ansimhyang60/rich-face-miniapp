@@ -68,7 +68,7 @@ export default function ScanScreen() {
       {/* Progress Bar */}
       <div style={{ width: '80%', height: '6px', backgroundColor: '#e5e8eb', borderRadius: '4px', marginTop: '32px', overflow: 'hidden' }}>
         <div style={{ 
-          width: \`\${progress}%\`, 
+          width: progress + '%', 
           height: '100%', 
           backgroundColor: 'var(--toss-blue)',
           transition: 'width 0.1s linear'
