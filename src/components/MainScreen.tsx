@@ -37,6 +37,23 @@ export default function MainScreen() {
         </div>
       </div>
       
+      {/* Professional Logic Disclaimer */}
+      <div style={{ 
+        marginTop: '32px', 
+        padding: '16px', 
+        backgroundColor: 'rgba(0, 0, 0, 0.03)', 
+        borderRadius: '12px',
+        textAlign: 'center',
+        marginBottom: '32px'
+      }}>
+        <h4 style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-sub)', marginBottom: '8px' }}>
+          💡 AI 안면 분석 알고리즘 안내
+        </h4>
+        <p style={{ fontSize: '11px', color: '#8b95a1', lineHeight: '1.5', wordBreak: 'keep-all' }}>
+          본 서비스의 관상 분석 AI는 『마의상법(麻衣相法)』 등 동양 정통 관상학 문헌과 전 세계 1,500명 이상의 자수성가 부호 및 재벌 총수의 안면 빅데이터를 딥러닝으로 교차 분석합니다. 눈, 코, 입, 이마, 귀, 턱의 미세한 구조를 추출하여 총 26,250가지의 정밀 조합으로 도출된 과학적이고 전문적인 결과를 제공합니다.
+        </p>
+      </div>
+
       {/* Golden Camera Area */}
       <div 
         onClick={triggerFileInput}
