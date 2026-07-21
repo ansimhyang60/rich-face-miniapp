@@ -8,6 +8,7 @@ import ResultScreen from './components/ResultScreen';
 import RealityScreen from './components/RealityScreen';
 import BattleScreen from './components/BattleScreen';
 import RitualScreen from './components/RitualScreen';
+import RankingScreen from './components/RankingScreen';
 
 function BottomNav() {
   return (
@@ -54,6 +55,7 @@ function App() {
           <Route path="/reality" element={<RealityScreen />} />
           <Route path="/battle" element={<BattleScreen />} />
           <Route path="/ritual" element={<RitualScreen />} />
+          <Route path="/ranking" element={<RankingScreen />} />
         </Routes>
         
         <BottomNav />

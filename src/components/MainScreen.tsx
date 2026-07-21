@@ -128,11 +128,15 @@ export default function MainScreen() {
       {/* Friend Ranking */}
       <div className="card" style={{ padding: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Trophy size={18} color="var(--text-main)" />
-            <h3 style={{fontSize: '16px', fontWeight: 'bold'}}>친구 재력 랭킹</h3>
-          </div>
-          <ChevronRight size={16} color="var(--text-sub)" />
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Trophy size={18} color="var(--gold-dark)" /> 내 친구 재력 랭킹
+          </h3>
+          <span 
+            onClick={() => navigate('/ranking')} 
+            style={{ fontSize: '13px', color: 'var(--text-sub)', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          >
+            전체보기 <ChevronRight size={16} />
+          </span>
         </div>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
