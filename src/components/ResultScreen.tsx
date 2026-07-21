@@ -1,4 +1,4 @@
-import { Share2, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Share2, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useUserStore } from '../store/userStore';

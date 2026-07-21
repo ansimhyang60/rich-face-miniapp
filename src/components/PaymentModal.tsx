@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { loadPaymentWidget, PaymentWidgetInstance } from '@tosspayments/payment-widget-sdk';
+import { loadPaymentWidget, type PaymentWidgetInstance } from '@tosspayments/payment-widget-sdk';
 import { useUserStore } from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
 

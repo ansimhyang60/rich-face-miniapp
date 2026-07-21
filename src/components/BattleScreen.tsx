@@ -1,4 +1,4 @@
-import { Users, Search, Target } from 'lucide-react';
+import { Users, Search } from 'lucide-react';
 
 export default function BattleScreen() {
   return (

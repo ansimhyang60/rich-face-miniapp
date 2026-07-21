@@ -1,4 +1,4 @@
-import { AlertOctagon, TrendingDown, Coffee, ShoppingBag, ArrowLeft } from 'lucide-react';
+import { AlertOctagon, Coffee, ShoppingBag, ArrowLeft } from 'lucide-react';
 
 export default function RealityScreen() {
   return (
