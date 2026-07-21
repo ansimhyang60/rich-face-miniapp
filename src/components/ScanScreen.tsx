@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ScanFace } from 'lucide-react';
 import { generateFaceAnalysis } from '../utils/faceLogic';
 import { useUserStore } from '../store/userStore';
 
 export default function ScanScreen() {
   const navigate = useNavigate();
-  const location = useLocation();
   const setFaceData = useUserStore(state => state.setFaceData);
   
   const [progress, setProgress] = useState(0);
