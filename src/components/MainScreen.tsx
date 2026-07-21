@@ -1,11 +1,24 @@
 import { useNavigate } from 'react-router-dom';
 import { Camera, Trophy, ChevronRight, Crown, ShieldCheck, PlaySquare } from 'lucide-react';
+import { useRef } from 'react';
 import { useTossBridge } from '../hooks/useTossBridge';
 import { useAds } from '../hooks/useAds';
 import { useUserStore } from '../store/userStore';
 
 export default function MainScreen() {
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      // 사진이 선택되면 스캔 화면으로 넘어갑니다.
+      navigate('/scan');
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
   const { requestMyDataConsent, isRequesting } = useTossBridge();
   const { showRewardedAd, isPlayingAd } = useAds();
   const { credits, hasMyDataConsent } = useUserStore();
@@ -25,7 +38,9 @@ export default function MainScreen() {
       </div>
       
       {/* Golden Camera Area */}
-      <div style={{
+      <div 
+        onClick={triggerFileInput}
+        style={{
         width: '100%', 
         aspectRatio: '1', 
         backgroundColor: '#fff', 
@@ -38,8 +53,17 @@ export default function MainScreen() {
         border: '1px solid #f0f0f0', 
         boxShadow: '0 20px 40px rgba(212, 160, 0, 0.08)',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        cursor: 'pointer'
       }}>
+        <input 
+          type="file" 
+          accept="image/*" 
+          ref={fileInputRef} 
+          onChange={handlePhotoUpload} 
+          style={{ display: 'none' }} 
+        />
+        
         {/* Glow effect */}
         <div style={{
           position: 'absolute', width: '150%', height: '150%',
@@ -142,7 +166,7 @@ export default function MainScreen() {
       </div>
 
       <div className="bottom-cta">
-        <button className="btn-primary" onClick={() => navigate('/scan')}>
+        <button className="btn-primary" onClick={triggerFileInput}>
           분석 시작하기
         </button>
       </div>
