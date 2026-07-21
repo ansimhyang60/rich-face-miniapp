@@ -7,7 +7,6 @@ import { useUserStore } from '../store/userStore';
 export default function ScanScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const photoUrl = location.state?.photoUrl;
   const setFaceData = useUserStore(state => state.setFaceData);
   
   const [progress, setProgress] = useState(0);

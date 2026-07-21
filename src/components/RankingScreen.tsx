@@ -1,4 +1,4 @@
-import { ArrowLeft, Crown, TrendingUp, Medal } from 'lucide-react';
+import { ArrowLeft, Crown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function RankingScreen() {
