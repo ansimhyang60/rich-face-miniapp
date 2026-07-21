@@ -6,30 +6,29 @@ import PaymentModal from './PaymentModal';
 
 export default function ResultScreen() {
   const navigate = useNavigate();
-  const { credits, useCredit, unlockedRealityReport } = useUserStore();
+  const { credits, useCredit, unlockedRealityReport, faceScore, habitScore, faceTraits } = useUserStore();
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [score, setScore] = useState(0);
   const [targetScore, setTargetScore] = useState(0);
   
-  // 랜덤 점수 및 티어 데이터
   useEffect(() => {
-    // 30 ~ 99 사이의 랜덤 점수
-    const randomScore = Math.floor(Math.random() * 70) + 30;
-    setTargetScore(randomScore);
+    // 최종 점수 = (관상 점수 + 습관 점수) / 2
+    const finalScore = Math.round((faceScore + habitScore) / 2);
+    setTargetScore(finalScore);
     
     // 점수 카운팅 애니메이션
     let current = 0;
     const interval = setInterval(() => {
       current += 2;
-      if (current >= randomScore) {
-        setScore(randomScore);
+      if (current >= finalScore) {
+        setScore(finalScore);
         clearInterval(interval);
       } else {
         setScore(current);
       }
     }, 20);
     return () => clearInterval(interval);
-  }, []);
+  }, [faceScore, habitScore]);
 
   const handleOpenReport = () => {
     if (unlockedRealityReport) {
@@ -83,7 +82,7 @@ export default function ResultScreen() {
           background: `radial-gradient(circle, ${tier.color}40 0%, rgba(255,255,255,0) 70%)`,
         }} />
 
-        <p style={{ fontSize: '15px', color: '#a0a0a0', marginBottom: '8px' }}>AI가 분석한 당신의 부자 점수</p>
+        <p style={{ fontSize: '15px', color: '#a0a0a0', marginBottom: '8px' }}>AI 종합 부자 점수 (관상+습관)</p>
         <div style={{ 
           fontSize: '64px', fontWeight: '800', color: tier.color, 
           lineHeight: '1', margin: '16px 0',
@@ -93,13 +92,28 @@ export default function ResultScreen() {
           {score}<span style={{ fontSize: '32px', color: '#fff' }}>점</span>
         </div>
         
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '8px 12px', borderRadius: '8px', fontSize: '12px' }}>
-            재물운 <span style={{color: tier.color, fontWeight: 'bold'}}>{targetScore >= 70 ? '최상' : targetScore >= 50 ? '보통' : '위험'}</span>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '12px', marginBottom: '24px' }}>
+          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 10px', borderRadius: '8px', fontSize: '12px' }}>
+            관상 점수 <span style={{color: tier.color, fontWeight: 'bold'}}>{faceScore}점</span>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '8px 12px', borderRadius: '8px', fontSize: '12px' }}>
-            소비 방어력 <span style={{color: tier.color, fontWeight: 'bold'}}>{targetScore >= 90 ? '최상' : '최하'}</span>
+          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 10px', borderRadius: '8px', fontSize: '12px' }}>
+            마인드 점수 <span style={{color: tier.color, fontWeight: 'bold'}}>{habitScore}점</span>
           </div>
+        </div>
+
+        {/* AI 관상 분석 상세 리포트 */}
+        <div style={{ textAlign: 'left', background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '12px' }}>
+          <p style={{ fontSize: '13px', color: 'var(--gold-main)', fontWeight: 'bold', marginBottom: '12px' }}>✨ AI 안면 구조 분석 결과</p>
+          <ul style={{ paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {faceTraits.map((trait, idx) => (
+              <li key={idx} style={{ fontSize: '13px', color: '#d1d6db', lineHeight: '1.4' }}>
+                {trait.description}
+                <span style={{ marginLeft: '4px', color: trait.score > 0 ? '#3182F6' : '#FF453A' }}>
+                  ({trait.score > 0 ? '+' : ''}{trait.score}점)
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 

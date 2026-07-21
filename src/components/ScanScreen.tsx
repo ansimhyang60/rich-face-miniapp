@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ScanFace } from 'lucide-react';
+import { generateFaceAnalysis } from '../utils/faceLogic';
+import { useUserStore } from '../store/userStore';
 
 export default function ScanScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const photoUrl = location.state?.photoUrl;
+  const setFaceData = useUserStore(state => state.setFaceData);
+  
   const [progress, setProgress] = useState(0);
   const [stepText, setStepText] = useState('얼굴 윤곽을 추출하는 중...');
 
@@ -13,7 +19,11 @@ export default function ScanScreen() {
         const next = p + 2;
         if (next >= 100) {
           clearInterval(timer);
-          setTimeout(() => navigate('/result'), 500);
+          
+          const faceAnalysis = generateFaceAnalysis();
+          setFaceData(faceAnalysis.score, faceAnalysis.traits);
+          
+          setTimeout(() => navigate('/test'), 500);
           return 100;
         }
         
