@@ -1,8 +1,31 @@
-import { Share2, AlertTriangle } from 'lucide-react';
+import { Share2, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useUserStore } from '../store/userStore';
+import PaymentModal from './PaymentModal';
 
 export default function ResultScreen() {
   const navigate = useNavigate();
+  const { credits, useCredit, unlockedRealityReport } = useUserStore();
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+
+  const handleOpenReport = () => {
+    if (unlockedRealityReport) {
+      navigate('/reality');
+      return;
+    }
+    
+    if (credits > 0) {
+      const wantToUse = window.confirm(`무료 재검사 혜택(크레딧)이 ${credits}개 있습니다! 1개를 차감하고 리포트를 보시겠습니까?`);
+      if (wantToUse) {
+        useCredit();
+        navigate('/reality');
+      }
+    } else {
+      setIsPaymentOpen(true);
+    }
+  };
+
   return (
     <div className="content-area">
       <div style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -61,25 +84,28 @@ export default function ResultScreen() {
         <p style={{ fontSize: '14px', lineHeight: '1.5', color: 'var(--text-main)', marginBottom: '16px' }}>
           관상은 이건희 회장님인데, 이번 달 토스 소비 내역을 분석해보니 <strong>충격적인 결과</strong>가 나왔습니다.
         </p>
-        <button onClick={() => navigate('/reality')} style={{ 
+        <button onClick={handleOpenReport} style={{ 
           width: '100%', padding: '16px', 
           background: 'var(--toss-red-bg)', color: 'var(--toss-red)', 
           border: 'none', borderRadius: '12px', 
           fontSize: '15px', fontWeight: '700', cursor: 'pointer',
-          transition: 'background 0.2s'
+          transition: 'background 0.2s',
+          display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
         }}>
-          팩폭 현타 리포트 열기 (100원 결제)
+          {unlockedRealityReport ? '이미 구매한 리포트 바로 보기' : credits > 0 ? '✨ 무료 크레딧으로 리포트 열기' : '팩폭 현타 리포트 열기 (100원 결제)'}
         </button>
       </div>
 
       <div className="bottom-cta" style={{ display: 'flex', gap: '12px' }}>
-        <button className="btn-primary" style={{ flex: 1, backgroundColor: '#f2f4f6', color: 'var(--text-main)' }}>
+        <button onClick={() => navigate('/')} className="btn-primary" style={{ flex: 1, backgroundColor: '#f2f4f6', color: 'var(--text-main)' }}>
           다시하기
         </button>
         <button className="btn-primary" style={{ flex: 2, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Share2 size={18} /> 자랑하기
         </button>
       </div>
+
+      <PaymentModal isOpen={isPaymentOpen} onClose={() => setIsPaymentOpen(false)} />
     </div>
   );
 }

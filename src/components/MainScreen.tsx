@@ -1,14 +1,27 @@
 import { useNavigate } from 'react-router-dom';
-import { Camera, Trophy, ChevronRight, Crown } from 'lucide-react';
+import { Camera, Trophy, ChevronRight, Crown, ShieldCheck, PlaySquare } from 'lucide-react';
+import { useTossBridge } from '../hooks/useTossBridge';
+import { useAds } from '../hooks/useAds';
+import { useUserStore } from '../store/userStore';
 
 export default function MainScreen() {
   const navigate = useNavigate();
+  const { requestMyDataConsent, isRequesting } = useTossBridge();
+  const { showRewardedAd, isPlayingAd } = useAds();
+  const { credits, hasMyDataConsent } = useUserStore();
 
   return (
     <div className="content-area">
-      <div style={{ marginBottom: '32px', marginTop: '16px' }}>
-        <h1 className="title">내 관상은<br />얼마짜리일까?</h1>
-        <p className="subtitle">AI가 당신의 얼굴에 숨겨진 재물운을 분석합니다.</p>
+      <div style={{ marginBottom: '24px', marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h1 className="title">내 관상은<br />얼마짜리일까?</h1>
+          <p className="subtitle">AI가 당신의 얼굴에 숨겨진 재물운을 분석합니다.</p>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+          <div style={{ background: 'var(--gold-light)', color: 'var(--gold-dark)', padding: '6px 12px', borderRadius: '16px', fontSize: '13px', fontWeight: 'bold' }}>
+            보유 크레딧: {credits}개
+          </div>
+        </div>
       </div>
       
       {/* Golden Camera Area */}
@@ -51,6 +64,41 @@ export default function MainScreen() {
         <p style={{ color: 'var(--text-sub)', fontSize: '13px', marginTop: '8px', zIndex: 1 }}>
           * 데이터는 분석 즉시 삭제됩니다
         </p>
+      </div>
+
+      {/* Credit Earnings */}
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+        <button 
+          onClick={requestMyDataConsent} 
+          disabled={hasMyDataConsent || isRequesting}
+          style={{ 
+            flex: 1, padding: '16px', borderRadius: '16px', border: 'none',
+            background: hasMyDataConsent ? '#f2f4f6' : 'rgba(49, 130, 246, 0.1)', 
+            color: hasMyDataConsent ? 'var(--text-sub)' : 'var(--toss-blue)', 
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+            cursor: hasMyDataConsent ? 'default' : 'pointer'
+          }}
+        >
+          <ShieldCheck size={24} />
+          <div style={{ fontSize: '13px', fontWeight: 'bold' }}>
+            {hasMyDataConsent ? '마이데이터 연동 완료' : '마이데이터 연동하고\n1회 무료 받기'}
+          </div>
+        </button>
+        <button 
+          onClick={showRewardedAd}
+          disabled={isPlayingAd}
+          style={{ 
+            flex: 1, padding: '16px', borderRadius: '16px', border: 'none',
+            background: 'rgba(255, 192, 0, 0.1)', color: 'var(--gold-dark)', 
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+            cursor: isPlayingAd ? 'wait' : 'pointer'
+          }}
+        >
+          <PlaySquare size={24} />
+          <div style={{ fontSize: '13px', fontWeight: 'bold' }}>
+            광고 보고<br/>분석 로켓 받기
+          </div>
+        </button>
       </div>
 
       {/* Friend Ranking */}
