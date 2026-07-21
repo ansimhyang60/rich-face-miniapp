@@ -1,6 +1,8 @@
 import { AlertOctagon, Coffee, ShoppingBag, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function RealityScreen() {
+  const navigate = useNavigate();
   return (
     <div className="content-area" style={{ backgroundColor: '#111', color: '#fff', minHeight: '100vh' }}>
       <header className="header" style={{ backgroundColor: '#111', color: '#fff', marginBottom: '24px' }}>
@@ -57,7 +59,7 @@ export default function RealityScreen() {
       </div>
 
       <div className="bottom-cta" style={{ background: 'linear-gradient(to top, rgba(17,17,17,1) 70%, rgba(17,17,17,0))' }}>
-        <button className="btn-primary" style={{ backgroundColor: '#FF453A', color: '#fff', boxShadow: '0 8px 24px rgba(255, 69, 58, 0.4)' }}>
+        <button onClick={() => navigate('/ritual')} className="btn-primary" style={{ backgroundColor: '#FF453A', color: '#fff', boxShadow: '0 8px 24px rgba(255, 69, 58, 0.4)' }}>
           리치 리추얼 시작하고 액땜하기
         </button>
       </div>
