@@ -1,6 +1,8 @@
 import { Share2, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function ResultScreen() {
+  const navigate = useNavigate();
   return (
     <div className="content-area">
       <div style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -59,7 +61,7 @@ export default function ResultScreen() {
         <p style={{ fontSize: '14px', lineHeight: '1.5', color: 'var(--text-main)', marginBottom: '16px' }}>
           관상은 이건희 회장님인데, 이번 달 토스 소비 내역을 분석해보니 <strong>충격적인 결과</strong>가 나왔습니다.
         </p>
-        <button style={{ 
+        <button onClick={() => navigate('/reality')} style={{ 
           width: '100%', padding: '16px', 
           background: 'var(--toss-red-bg)', color: 'var(--toss-red)', 
           border: 'none', borderRadius: '12px', 
