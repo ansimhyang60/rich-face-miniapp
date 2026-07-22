@@ -1,16 +1,21 @@
+* {
+  box-sizing: border-box;
+}
+
 /* Base Layout */
 .app-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 .content-area {
   flex: 1;
   padding: 20px 24px;
   overflow-y: auto;
-  padding-bottom: 120px; /* Space for bottom CTA */
+  padding-bottom: 200px; /* Space for bottom CTA + Nav */
 }
 
 /* Header */
@@ -55,12 +60,14 @@
 
 /* Bottom CTA Area */
 .bottom-cta {
-  position: absolute;
-  bottom: 0;
+  position: fixed;
+  bottom: calc(68px + env(safe-area-inset-bottom, 20px));
   left: 0;
   width: 100%;
-  padding: 16px 24px 32px;
-  background: linear-gradient(to top, rgba(242, 244, 246, 1) 70%, rgba(242, 244, 246, 0));
+  padding: 16px 24px 16px;
+  background: linear-gradient(to top, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, 0));
+  z-index: 90;
+  box-sizing: border-box;
 }
 
 .btn-primary {
