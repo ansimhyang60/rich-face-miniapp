@@ -3,6 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { habitQuestions } from '../utils/habitQuestions';
 import { useUserStore } from '../store/userStore';
 
+const OPTIONS = [
+  { label: '전혀 아니다', score: 1 },
+  { label: '아니다', score: 2 },
+  { label: '보통이다', score: 3 },
+  { label: '그렇다', score: 4 },
+  { label: '매우 그렇다', score: 5 },
+];
+
 export default function HabitTestScreen() {
   const navigate = useNavigate();
   const setHabitScore = useUserStore((state) => state.setHabitScore);
@@ -21,7 +29,6 @@ export default function HabitTestScreen() {
   };
 
   const handleNext = () => {
-    // 모든 문항을 다 답했는지 검증
     const allAnswered = currentQuestions.every(q => answers[q.id] !== undefined);
     if (!allAnswered) {
       alert("모든 문항에 답변해주세요.");
@@ -32,9 +39,7 @@ export default function HabitTestScreen() {
       setCurrentPage(prev => prev + 1);
       window.scrollTo(0, 0);
     } else {
-      // 결과 계산
       const totalScore = Object.values(answers).reduce((acc, val) => acc + val, 0);
-      // 50문항 * 최대 5점 = 250점 만점. 100점 만점으로 스케일링
       const scaledScore = Math.round((totalScore / 250) * 100);
       setHabitScore(scaledScore);
       navigate('/result');
@@ -44,54 +49,57 @@ export default function HabitTestScreen() {
   const progressPercent = ((currentPage + 1) / totalPages) * 100;
 
   return (
-    <div className="content-area" style={{ backgroundColor: '#f2f4f6', minHeight: '100vh', paddingBottom: '100px' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <h1 className="title" style={{ fontSize: '24px' }}>부자되는 습관 테스트</h1>
-        <p className="subtitle">AI가 사진을 분석하는 동안 습관을 체크해주세요.</p>
+    <div className="content-area" style={{ backgroundColor: '#111', minHeight: '100vh', paddingBottom: '120px' }}>
+      <div style={{ padding: '0 20px', marginBottom: '24px' }}>
+        <h1 className="title" style={{ fontSize: '24px', color: '#fff' }}>부자되는 습관 테스트</h1>
+        <p className="subtitle" style={{ color: '#8b95a1' }}>AI가 안면 구조를 분석하는 동안 습관을 체크해주세요.</p>
         
         {/* Progress Bar */}
-        <div style={{ width: '100%', height: '8px', backgroundColor: '#e5e8eb', borderRadius: '4px', overflow: 'hidden', marginTop: '16px' }}>
-          <div style={{ width: `${progressPercent}%`, height: '100%', backgroundColor: 'var(--toss-blue)', transition: 'width 0.3s' }} />
+        <div style={{ width: '100%', height: '8px', backgroundColor: '#333', borderRadius: '4px', overflow: 'hidden', marginTop: '16px' }}>
+          <div style={{ width: `${progressPercent}%`, height: '100%', backgroundColor: 'var(--gold-main)', transition: 'width 0.3s' }} />
         </div>
-        <p style={{ textAlign: 'right', fontSize: '12px', color: 'var(--text-sub)', marginTop: '8px' }}>
+        <p style={{ textAlign: 'right', fontSize: '12px', color: '#888', marginTop: '8px' }}>
           {currentPage + 1} / {totalPages} 페이지
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{ padding: '0 20px' }}>
         {currentQuestions.map((q, idx) => (
-          <div key={q.id} className="card" style={{ padding: '20px', marginBottom: 0 }}>
-            <p style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '16px', lineHeight: '1.5' }}>
-              <span style={{ color: 'var(--toss-blue)', marginRight: '8px' }}>Q{startIndex + idx + 1}.</span>
+          <div key={q.id} style={{ 
+            marginBottom: '24px', 
+            background: 'rgba(0,0,0,0.2)', 
+            padding: '20px', 
+            borderRadius: '16px',
+            border: '1px solid rgba(255,255,255,0.05)'
+          }}>
+            <p style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '16px', lineHeight: '1.5', color: '#fff' }}>
+              <span style={{ color: 'var(--gold-main)', marginRight: '8px' }}>Q{startIndex + idx + 1}.</span>
               {q.text}
             </p>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '4px' }}>
-              {[
-                { label: '전혀', score: 1 },
-                { label: '아니다', score: 2 },
-                { label: '보통', score: 3 },
-                { label: '그렇다', score: 4 },
-                { label: '매우', score: 5 },
-              ].map((opt) => {
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {OPTIONS.map((opt, optIdx) => {
                 const isSelected = answers[q.id] === opt.score;
                 return (
                   <button
-                    key={opt.score}
+                    key={optIdx}
                     onClick={() => handleSelect(q.id, opt.score)}
                     style={{
-                      flex: 1,
-                      padding: '12px 0',
-                      border: isSelected ? '2px solid var(--toss-blue)' : '1px solid #d1d6db',
+                      padding: '14px',
                       borderRadius: '12px',
-                      backgroundColor: isSelected ? 'rgba(49, 130, 246, 0.1)' : '#fff',
-                      color: isSelected ? 'var(--toss-blue)' : 'var(--text-main)',
-                      fontWeight: isSelected ? 'bold' : 'normal',
-                      fontSize: '13px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s'
+                      border: `1px solid ${isSelected ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}`,
+                      backgroundColor: isSelected ? 'rgba(212, 175, 55, 0.15)' : 'transparent',
+                      color: isSelected ? 'var(--gold-main)' : '#d1d6db',
+                      textAlign: 'left',
+                      fontSize: '14px',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: 'pointer'
                     }}
                   >
                     {opt.label}
+                    {isSelected && <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--gold-main)' }} />}
                   </button>
                 );
               })}
@@ -100,9 +108,31 @@ export default function HabitTestScreen() {
         ))}
       </div>
 
-      <div className="bottom-cta" style={{ background: 'linear-gradient(to top, rgba(242,244,246,1) 80%, rgba(242,244,246,0))' }}>
-        <button className="btn-primary" onClick={handleNext}>
-          {currentPage < totalPages - 1 ? '다음으로' : '결과 확인하기'}
+      <div style={{ 
+        position: 'fixed', 
+        bottom: 0, 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        width: '100%', 
+        maxWidth: '480px', 
+        padding: '16px 20px', 
+        background: 'linear-gradient(to top, #111 50%, transparent)',
+        display: 'flex',
+        justifyContent: 'center',
+        zIndex: 10
+      }}>
+        <button 
+          className="btn-primary" 
+          onClick={handleNext}
+          style={{ 
+            width: '100%', 
+            padding: '16px', 
+            fontSize: '16px', 
+            fontWeight: 'bold',
+            boxShadow: '0 4px 20px rgba(212, 175, 55, 0.4)'
+          }}
+        >
+          {currentPage === totalPages - 1 ? '결과 분석하기 ✨' : `다음 문항으로 (${currentPage + 1}/${totalPages})`}
         </button>
       </div>
     </div>

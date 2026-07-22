@@ -10,6 +10,7 @@ import BattleScreen from './components/BattleScreen';
 import RitualScreen from './components/RitualScreen';
 import RankingScreen from './components/RankingScreen';
 import HabitTestScreen from './components/HabitTestScreen';
+import ScrollToTop from './components/ScrollToTop';
 
 function BottomNav() {
   return (
@@ -38,6 +39,7 @@ function BottomNav() {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="app-container">
         <header className="header">
           <ChevronLeft 
