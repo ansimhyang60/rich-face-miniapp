@@ -4,6 +4,7 @@ interface UserState {
   credits: number;
   hasMyDataConsent: boolean;
   unlockedRealityReport: boolean;
+  photoUrl: string | null;
   faceScore: number;
   faceTraits: any[];
   habitScore: number;
@@ -11,6 +12,7 @@ interface UserState {
   useCredit: () => boolean;
   grantMyDataConsent: () => void;
   unlockRealityReport: () => void;
+  setPhotoUrl: (url: string) => void;
   setFaceData: (score: number, traits: any[]) => void;
   setHabitScore: (score: number) => void;
 }
@@ -19,6 +21,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   credits: 0,
   hasMyDataConsent: false,
   unlockedRealityReport: false,
+  photoUrl: null,
   faceScore: 0,
   faceTraits: [],
   habitScore: 0,
@@ -37,6 +40,8 @@ export const useUserStore = create<UserState>((set, get) => ({
   grantMyDataConsent: () => set({ hasMyDataConsent: true, credits: get().credits + 1 }), // 1 free credit on consent
   
   unlockRealityReport: () => set({ unlockedRealityReport: true }),
+
+  setPhotoUrl: (url) => set({ photoUrl: url }),
 
   setFaceData: (score, traits) => set({ faceScore: score, faceTraits: traits }),
   

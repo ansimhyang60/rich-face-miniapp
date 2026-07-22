@@ -1,12 +1,21 @@
-import { Share2, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Share2, AlertTriangle, RefreshCw, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '../store/userStore';
 import PaymentModal from './PaymentModal';
 
+const PART_COORDS: Record<string, { top: string; left: string }> = {
+  forehead: { top: '25%', left: '50%' },
+  eyes: { top: '42%', left: '35%' },
+  nose: { top: '58%', left: '50%' },
+  ears: { top: '50%', left: '75%' },
+  mouth: { top: '72%', left: '50%' },
+  jaw: { top: '88%', left: '50%' },
+};
+
 export default function ResultScreen() {
   const navigate = useNavigate();
-  const { credits, useCredit, unlockedRealityReport, faceScore, habitScore, faceTraits } = useUserStore();
+  const { credits, useCredit, unlockedRealityReport, faceScore, habitScore, faceTraits, photoUrl } = useUserStore();
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [score, setScore] = useState(0);
   const [targetScore, setTargetScore] = useState(0);
@@ -70,6 +79,62 @@ export default function ResultScreen() {
         <h1 className="title" style={{ fontSize: '28px', transition: 'all 0.3s' }}>{tier.title}</h1>
       </div>
       
+      {/* Face Visual Overlay */}
+      <div style={{ 
+        position: 'relative', width: '100%', height: '320px', 
+        backgroundColor: '#191919', borderRadius: '16px', 
+        overflow: 'hidden', marginBottom: '24px',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+      }}>
+        {photoUrl ? (
+          <img src={photoUrl} alt="Scanned Face" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Camera size={48} color="#444" />
+          </div>
+        )}
+
+        {/* Positive Traits Overlays */}
+        {faceTraits.filter(t => t.score > 0).map(trait => {
+          const coords = PART_COORDS[trait.part] || { top: '50%', left: '50%' };
+          const isLeft = parseInt(coords.left) < 50;
+          return (
+            <div key={trait.part} style={{ position: 'absolute', top: coords.top, left: coords.left }}>
+              {/* Point Dot */}
+              <div style={{ 
+                position: 'absolute', width: '10px', height: '10px', 
+                borderRadius: '50%', backgroundColor: 'var(--gold-main)', 
+                transform: 'translate(-50%, -50%)', 
+                boxShadow: '0 0 10px var(--gold-main)', zIndex: 2
+              }} />
+              
+              {/* Connecting Line & Text Bubble */}
+              <div style={{ 
+                position: 'absolute', top: '-10px',
+                left: isLeft ? 'auto' : '15px',
+                right: isLeft ? '15px' : 'auto',
+                borderBottom: '1px solid var(--gold-main)',
+                paddingBottom: '4px',
+                minWidth: '100px',
+                textAlign: isLeft ? 'right' : 'left',
+                zIndex: 1
+              }}>
+                <div style={{ 
+                  background: 'rgba(0,0,0,0.7)', color: 'var(--gold-main)', 
+                  fontSize: '11px', fontWeight: 'bold', padding: '6px 10px', 
+                  borderRadius: '8px', whiteSpace: 'nowrap',
+                  border: '1px solid var(--gold-main)',
+                  display: 'inline-block'
+                }}>
+                  {trait.description.split(' (')[0]}
+                  <span style={{color: '#fff', marginLeft: '4px'}}>+{trait.score}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
       {/* Score Card */}
       <div className="card" style={{ 
         background: 'linear-gradient(145deg, #191919, #2d2d2d)', 
@@ -101,18 +166,22 @@ export default function ResultScreen() {
           </div>
         </div>
 
-        {/* AI 관상 분석 상세 리포트 */}
+        {/* AI 관상 분석 상세 리포트 (Negative Traits primarily) */}
         <div style={{ textAlign: 'left', background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '12px' }}>
-          <p style={{ fontSize: '13px', color: 'var(--gold-main)', fontWeight: 'bold', marginBottom: '12px' }}>✨ AI 안면 구조 분석 결과</p>
+          <p style={{ fontSize: '13px', color: '#ff453a', fontWeight: 'bold', marginBottom: '12px' }}>⚠️ 팩폭 주의: 개선이 필요한 거지상 특징</p>
           <ul style={{ paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {faceTraits.map((trait, idx) => (
-              <li key={idx} style={{ fontSize: '13px', color: '#d1d6db', lineHeight: '1.4' }}>
-                {trait.description}
-                <span style={{ marginLeft: '4px', color: trait.score > 0 ? '#3182F6' : '#FF453A' }}>
-                  ({trait.score > 0 ? '+' : ''}{trait.score}점)
-                </span>
-              </li>
-            ))}
+            {faceTraits.filter(t => t.score <= 0).length > 0 ? (
+              faceTraits.filter(t => t.score <= 0).map((trait, idx) => (
+                <li key={idx} style={{ fontSize: '13px', color: '#ff453a', lineHeight: '1.4' }}>
+                  {trait.description}
+                  <span style={{ marginLeft: '4px', color: '#ff453a' }}>
+                    ({trait.score}점)
+                  </span>
+                </li>
+              ))
+            ) : (
+              <li style={{ fontSize: '13px', color: '#d1d6db' }}>감점 요인이 없습니다! 완벽한 부자상입니다.</li>
+            )}
           </ul>
         </div>
       </div>

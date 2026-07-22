@@ -8,10 +8,17 @@ import { useUserStore } from '../store/userStore';
 export default function MainScreen() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const setPhotoUrl = useUserStore(state => state.setPhotoUrl);
   
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      // 사진이 선택되면 스캔 화면으로 넘어갑니다.
+      const file = e.target.files[0];
+      const url = URL.createObjectURL(file);
+      
+      // 스토어에 이미지 URL 저장
+      setPhotoUrl(url);
+      
+      // 스캔 화면으로 이동
       navigate('/scan');
     }
   };
