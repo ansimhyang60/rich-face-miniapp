@@ -38,6 +38,10 @@ export default function RitualScreen() {
   const [isAdding, setIsAdding] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('아침');
   
+  // 커스텀 루틴 추가 상태
+  const [customTitle, setCustomTitle] = useState('');
+  const [customFrequency, setCustomFrequency] = useState('매일');
+  
   const toggleRoutine = (id: number) => {
     setRoutines(prev => prev.map(r => r.id === id ? { ...r, completed: !r.completed } : r));
   };
@@ -51,6 +55,23 @@ export default function RitualScreen() {
       ...prev,
       { ...template, id: Date.now() }
     ]);
+    setIsAdding(false);
+  };
+
+  const handleAddCustom = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customTitle.trim()) return;
+    
+    const newRoutine: Routine = {
+      id: Date.now(),
+      title: customTitle,
+      frequency: customFrequency,
+      completed: false,
+      reward: 10
+    };
+    
+    setRoutines([...routines, newRoutine]);
+    setCustomTitle('');
     setIsAdding(false);
   };
 
@@ -113,7 +134,34 @@ export default function RitualScreen() {
                 </button>
               </div>
             ))}
-            <button onClick={() => setIsAdding(false)} style={{ width: '100%', padding: '12px', marginTop: '12px', borderRadius: '8px', border: 'none', backgroundColor: '#f2f4f6', fontWeight: 'bold' }}>
+            
+            <div style={{ marginTop: '24px', borderTop: '1px solid #e5e8eb', paddingTop: '16px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '12px' }}>직접 나만의 루틴 만들기</div>
+              <form onSubmit={handleAddCustom} style={{ display: 'flex', gap: '8px' }}>
+                <input 
+                  type="text" 
+                  value={customTitle} 
+                  onChange={(e) => setCustomTitle(e.target.value)} 
+                  placeholder="예: 영수증 모으기" 
+                  style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #d1d6db', fontSize: '14px' }}
+                />
+                <select 
+                  value={customFrequency} 
+                  onChange={(e) => setCustomFrequency(e.target.value)}
+                  style={{ padding: '10px', borderRadius: '8px', border: '1px solid #d1d6db', fontSize: '14px', backgroundColor: '#fff' }}
+                >
+                  <option value="매일">매일</option>
+                  <option value="월/수/금">월/수/금</option>
+                  <option value="매주 월요일">매주 월요일</option>
+                  <option value="소비시">소비시</option>
+                </select>
+                <button type="submit" style={{ padding: '10px 16px', backgroundColor: 'var(--toss-blue)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>
+                  추가
+                </button>
+              </form>
+            </div>
+
+            <button onClick={() => setIsAdding(false)} style={{ width: '100%', padding: '12px', marginTop: '16px', borderRadius: '8px', border: 'none', backgroundColor: '#f2f4f6', fontWeight: 'bold', color: 'var(--text-sub)' }}>
               닫기
             </button>
           </div>

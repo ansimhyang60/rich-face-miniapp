@@ -99,7 +99,7 @@ export default function ResultScreen() {
   const tier = getTierInfo(targetScore);
 
   return (
-    <div className="content-area" style={{ paddingBottom: '32px' }}>
+    <div className="content-area">
       
       {/* 캡처를 위한 컨테이너 (인스타용) */}
       <div ref={resultCardRef} style={{ padding: '20px', background: 'var(--bg-color)', borderRadius: '24px' }}>
