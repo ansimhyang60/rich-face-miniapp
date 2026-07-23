@@ -6,11 +6,15 @@ import MainScreen from './components/MainScreen';
 import ScanScreen from './components/ScanScreen';
 import ResultScreen from './components/ResultScreen';
 import RealityScreen from './components/RealityScreen';
-import BattleScreen from './components/BattleScreen';
+import BattleFriendScreen from './components/BattleFriendScreen';
 import RitualScreen from './components/RitualScreen';
 import RankingScreen from './components/RankingScreen';
 import HabitTestScreen from './components/HabitTestScreen';
 import ScrollToTop from './components/ScrollToTop';
+import CommunityScreen from './components/CommunityScreen';
+import TalismanScreen from './components/TalismanScreen';
+import MiniGameScreen from './components/MiniGameScreen';
+import SmileTrainerScreen from './components/SmileTrainerScreen';
 
 function BottomNav() {
   return (
@@ -30,7 +34,11 @@ function BottomNav() {
       </Link>
       <Link to="/battle" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--text-sub)', textDecoration: 'none', gap: '4px' }}>
         <Swords size={24} />
-        <span style={{ fontSize: '11px' }}>배틀</span>
+        <span style={{ fontSize: '11px' }}>맞짱</span>
+      </Link>
+      <Link to="/community" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--text-sub)', textDecoration: 'none', gap: '4px' }}>
+        <div style={{ fontSize: '24px', lineHeight: '24px' }}>💬</div>
+        <span style={{ fontSize: '11px' }}>거지방</span>
       </Link>
       <Link to="/ritual" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--text-sub)', textDecoration: 'none', gap: '4px' }}>
         <CheckSquare size={24} />
@@ -62,10 +70,14 @@ function Layout() {
         <Route path="/scan" element={<ScanScreen />} />
         <Route path="/result" element={<ResultScreen />} />
         <Route path="/reality" element={<RealityScreen />} />
-        <Route path="/battle" element={<BattleScreen />} />
+        <Route path="/battle" element={<BattleFriendScreen />} />
         <Route path="/ritual" element={<RitualScreen />} />
         <Route path="/ranking" element={<RankingScreen />} />
         <Route path="/test" element={<HabitTestScreen />} />
+        <Route path="/community" element={<CommunityScreen />} />
+        <Route path="/talisman" element={<TalismanScreen />} />
+        <Route path="/minigame" element={<MiniGameScreen />} />
+        <Route path="/smile-trainer" element={<SmileTrainerScreen />} />
       </Routes>
       
       {!shouldHideNav && <BottomNav />}

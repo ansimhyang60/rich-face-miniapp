@@ -268,6 +268,16 @@ export default function ResultScreen() {
       </div>
       {/* 캡처 영역 끝 */}
 
+      {/* 부적 생성 및 관상 성형 버튼 */}
+      <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <button className="btn-primary" onClick={() => navigate('/smile-trainer')} style={{ width: '100%', backgroundColor: 'var(--gold-main)', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+          <span>😁</span> 실시간 관상 성형 (입꼬리 교정)
+        </button>
+        <button className="btn-primary" onClick={() => navigate('/talisman')} style={{ width: '100%', backgroundColor: '#111', color: 'var(--gold-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+          <span>🔮</span> 결제 방어 부적 (배경화면) 만들기
+        </button>
+      </div>
+
       {/* Reality Check Hook (결과 카드 바로 밑으로 이동) */}
       <div className="card" style={{ 
         border: '1px solid rgba(227, 50, 57, 0.3)', 
