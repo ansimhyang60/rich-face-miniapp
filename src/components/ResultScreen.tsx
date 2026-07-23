@@ -33,20 +33,8 @@ export default function ResultScreen() {
   }, [faceScore, habitScore]);
 
   const handleOpenReport = () => {
-    if (unlockedRealityReport) {
-      navigate('/reality');
-      return;
-    }
-    
-    if (credits > 0) {
-      const wantToUse = window.confirm(`무료 재검사 혜택(크레딧)이 ${credits}개 있습니다! 1개를 차감하고 리포트를 보시겠습니까?`);
-      if (wantToUse) {
-        useCredit();
-        navigate('/reality');
-      }
-    } else {
-      setIsPaymentOpen(true);
-    }
+    // 테스트용 하이패스: 결제나 크레딧 없이 바로 열람
+    navigate('/reality');
   };
 
   const handleInstagramShare = async () => {

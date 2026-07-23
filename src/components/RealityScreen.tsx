@@ -5,9 +5,11 @@ export default function RealityScreen() {
   const navigate = useNavigate();
 
   // 더미 데이터 시뮬레이션
-  const currentAsset = 15000000; // 현재 1500만원
-  const monthlyIncome = 3200000;
-  const currentMonthlyExpense = 2950000; // 월 295만원 지출
+  const currentAsset = 5000000; // 현재 500만원
+  const monthlyIncome = 2500000; // 250만원
+  const currentMonthlyExpense = 2350000; // 월 235만원 지출 (15만원이 쓸데없는 낭비)
+  
+  // 낭비하는 금액 15만원 (카페 5만, 쇼핑 7만, 택시 3만)
   
   const savedPerMonth = monthlyIncome - currentMonthlyExpense;
   const projectedAsset1Y = currentAsset + (savedPerMonth * 12);
@@ -60,9 +62,9 @@ export default function RealityScreen() {
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
               <span style={{ fontSize: '15px', fontWeight: 'bold' }}>카페/간식 (배달)</span>
-              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--toss-red)' }}>월 45만원</span>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--toss-red)' }}>월 5만원</span>
             </div>
-            <p style={{ fontSize: '12px', color: 'var(--text-sub)' }}>커피값만 아꼈어도 이미 중고차 한 대 뽑았습니다.</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-sub)' }}>티끌 모아 태산입니다. 배달비만 아꼈어도 치킨이 몇 마리인가요.</p>
           </div>
         </div>
 
@@ -73,9 +75,9 @@ export default function RealityScreen() {
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
               <span style={{ fontSize: '15px', fontWeight: 'bold' }}>옷/쇼핑</span>
-              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--toss-red)' }}>월 82만원</span>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--toss-red)' }}>월 7만원</span>
             </div>
-            <p style={{ fontSize: '12px', color: 'var(--text-sub)' }}>옷장에 안 입는 옷이 70%입니다. 당근마켓에 당장 파세요.</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-sub)' }}>옷장에 안 입는 옷이 가득합니다. 당근마켓에 당장 파세요.</p>
           </div>
         </div>
 
@@ -86,9 +88,9 @@ export default function RealityScreen() {
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
               <span style={{ fontSize: '15px', fontWeight: 'bold' }}>택시비</span>
-              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--toss-red)' }}>월 31만원</span>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--toss-red)' }}>월 3만원</span>
             </div>
-            <p style={{ fontSize: '12px', color: 'var(--text-sub)' }}>길에 뿌린 택시비만 모아도 부자 관상이 진짜가 됐을 겁니다.</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-sub)' }}>조금만 일찍 일어나면 지하철 탈 수 있습니다. 뼈저리게 반성하세요.</p>
           </div>
         </div>
       </div>
