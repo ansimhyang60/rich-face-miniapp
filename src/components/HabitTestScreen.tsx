@@ -40,7 +40,7 @@ export default function HabitTestScreen() {
       window.scrollTo(0, 0);
     } else {
       const totalScore = Object.values(answers).reduce((acc, val) => acc + val, 0);
-      const scaledScore = Math.round((totalScore / 250) * 100);
+      const scaledScore = Math.round((totalScore / 50) * 100);
       setHabitScore(scaledScore);
       navigate('/result');
     }
