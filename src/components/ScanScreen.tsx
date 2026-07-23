@@ -59,7 +59,7 @@ export default function ScanScreen() {
           // 미디어파이프 핵심 랜드마크 인덱스 (이마, 눈, 코, 입, 턱)
           const POINT_INDICES = {
             forehead: 10,
-            eyes: 168, // 미간
+            eyes: 159, // 왼쪽 눈동자 (기존 168 미간에서 수정)
             nose: 1, // 코끝
             mouth: 13, // 윗입술
             jaw: 152 // 턱끝
