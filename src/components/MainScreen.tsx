@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { Camera, Trophy, ChevronRight, ShieldCheck, PlaySquare, Sparkles } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Camera, Trophy, ChevronRight, ShieldCheck, PlaySquare, Sparkles, CheckCircle2, Gamepad2, Smile } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
 import { useTossBridge } from '../hooks/useTossBridge';
 import { useAds } from '../hooks/useAds';
 import { useUserStore } from '../store/userStore';
@@ -8,7 +8,12 @@ import { useUserStore } from '../store/userStore';
 export default function MainScreen() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const setPhotoUrl = useUserStore(state => state.setPhotoUrl);
+  
+  const { credits, hasMyDataConsent, faceScore, habitScore, actionScore, setPhotoUrl } = useUserStore();
+  
+  // 종합 부자 점수 계산 (관상 + 습관 + 미니게임/스마일 노력 점수)
+  const totalScore = Math.min(100, Math.round((faceScore + habitScore) / 2) + actionScore);
+  const isBeggar = totalScore < 50;
   
   // 오늘의 운세 뽑기 상태
   const [fortuneRevealed, setFortuneRevealed] = useState(false);
@@ -32,21 +37,96 @@ export default function MainScreen() {
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+  
   const { requestMyDataConsent, isRequesting } = useTossBridge();
   const { showRewardedAd, isPlayingAd } = useAds();
-  const { credits, hasMyDataConsent } = useUserStore();
 
   return (
     <div className="content-area">
+      {/* 글로벌 스코어 대시보드 */}
       <div style={{ marginBottom: '24px', marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <h1 className="title">내 관상은<br />얼마짜리일까?</h1>
-          <p className="subtitle">AI가 당신의 얼굴에 숨겨진 재물운을 분석합니다.</p>
+          <h1 className="title" style={{ marginBottom: '8px' }}>
+            {faceScore === 0 ? '내 관상은\n얼마짜리일까?' : '나의 부자력\n대시보드'}
+          </h1>
+          {faceScore > 0 ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '14px', color: 'var(--text-sub)' }}>종합 스탯:</span>
+              <strong style={{ fontSize: '24px', color: isBeggar ? 'var(--toss-red)' : 'var(--gold-main)', fontWeight: '900' }}>
+                {totalScore}점
+              </strong>
+            </div>
+          ) : (
+            <p className="subtitle">AI가 당신의 얼굴에 숨겨진 재물운을 분석합니다.</p>
+          )}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
           <div style={{ background: 'var(--gold-light)', color: 'var(--gold-dark)', padding: '6px 12px', borderRadius: '16px', fontSize: '13px', fontWeight: 'bold' }}>
             보유 크레딧: {credits}개
           </div>
+        </div>
+      </div>
+
+      {faceScore > 0 && (
+        <div className="card" style={{ padding: '20px', backgroundColor: isBeggar ? '#f2f4f6' : '#191919', color: isBeggar ? '#111' : '#fff', marginBottom: '24px', border: `1px solid ${isBeggar ? 'var(--toss-red)' : 'var(--gold-main)'}` }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <span style={{ fontSize: '14px', fontWeight: 'bold' }}>현재 소속: {isBeggar ? '탑골공원 거지방 ⛺' : '시그니엘 플렉스방 👑'}</span>
+            <span style={{ fontSize: '12px', color: isBeggar ? 'var(--toss-red)' : 'var(--gold-main)' }}>
+              {isBeggar ? '탈출까지 ' + (50 - totalScore) + '점 남음' : '상위 1% 달성!'}
+            </span>
+          </div>
+          <div style={{ width: '100%', height: '8px', backgroundColor: isBeggar ? '#d1d6db' : '#333', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ width: `${Math.min(100, totalScore)}%`, height: '100%', backgroundColor: isBeggar ? 'var(--toss-red)' : 'var(--gold-main)', transition: 'width 0.5s ease-out' }} />
+          </div>
+        </div>
+      )}
+
+      {/* 데일리 퀘스트 (코어 루프 연결) */}
+      <div style={{ marginBottom: '32px' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          🎯 스탯업 데일리 퀘스트
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          
+          <div onClick={() => navigate('/minigame')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #f0f0f0', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'var(--toss-blue-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--toss-blue)' }}>
+                <Gamepad2 size={24} />
+              </div>
+              <div>
+                <div style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '4px' }}>쓰레기 비 뚫고 1원 줍기</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-sub)' }}>토스 감성 알바 미니게임</div>
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--toss-blue)' }}>+3점</div>
+          </div>
+
+          <div onClick={() => navigate('/smile-trainer')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #f0f0f0', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(255,192,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gold-main)' }}>
+                <Smile size={24} />
+              </div>
+              <div>
+                <div style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '4px' }}>실시간 자본주의 미소 교정</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-sub)' }}>카메라로 미소 5초 유지하기</div>
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--gold-dark)' }}>+10점</div>
+          </div>
+
+          <div onClick={() => navigate('/ritual')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #f0f0f0', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: '#f2f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-main)' }}>
+                <CheckCircle2 size={24} />
+              </div>
+              <div>
+                <div style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '4px' }}>오늘의 부자 리추얼 달성</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-sub)' }}>생활 습관 체크리스트</div>
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-main)' }}>+5점</div>
+          </div>
+
         </div>
       </div>
       
@@ -59,7 +139,8 @@ export default function MainScreen() {
           color: fortuneRevealed ? 'var(--text-main)' : '#fff',
           padding: '24px', textAlign: 'center', cursor: fortuneRevealed ? 'default' : 'pointer',
           border: fortuneRevealed ? '1px solid var(--gold-main)' : 'none',
-          transition: 'all 0.3s'
+          transition: 'all 0.3s',
+          marginBottom: '24px'
         }}
       >
         {!fortuneRevealed ? (
@@ -78,7 +159,7 @@ export default function MainScreen() {
         )}
       </div>
 
-      {/* Golden Camera Area */}
+      {/* Golden Camera Area (관상 분석 재시도) */}
       <div 
         onClick={triggerFileInput}
         style={{
@@ -124,7 +205,7 @@ export default function MainScreen() {
           <Camera size={48} color="var(--gold-dark)" strokeWidth={1.5} />
         </div>
         <p style={{ color: 'var(--gold-dark)', fontWeight: '700', fontSize: '18px', zIndex: 1, letterSpacing: '-0.5px' }}>
-          정면 사진 업로드
+          {faceScore > 0 ? '관상 다시 스캔하기' : '정면 사진 업로드'}
         </p>
         <p style={{ color: 'var(--text-sub)', fontSize: '13px', marginTop: '8px', zIndex: 1 }}>
           * 데이터는 분석 즉시 파기됩니다
@@ -163,61 +244,6 @@ export default function MainScreen() {
           <div style={{ fontSize: '13px', fontWeight: 'bold' }}>
             광고 보고<br/>분석 크레딧 받기
           </div>
-        </button>
-      </div>
-
-      {/* Friend Ranking - Podium UI */}
-      <div className="card" style={{ padding: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Trophy size={18} color="var(--gold-dark)" /> 내 친구 진짜 부자 랭킹
-          </h3>
-          <span 
-            onClick={() => navigate('/ranking')} 
-            style={{ fontSize: '13px', color: 'var(--text-sub)', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-          >
-            전체보기 <ChevronRight size={16} />
-          </span>
-        </div>
-        
-        {/* Podium */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', height: '160px', gap: '12px', marginTop: '20px' }}>
-          {/* 2nd Place */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '24px', marginBottom: '4px' }}>🥈</div>
-            <div style={{ fontSize: '13px', fontWeight: 'bold', marginBottom: '8px' }}>이현타</div>
-            <div style={{ width: '100%', height: '70px', background: 'linear-gradient(to top, #e5e8eb, #f2f4f6)', borderRadius: '8px 8px 0 0', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '8px', fontWeight: 'bold', color: 'var(--text-sub)' }}>
-              82점
-            </div>
-          </div>
-          
-          {/* 1st Place */}
-          <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '32px', marginBottom: '4px' }}>👑</div>
-            <div style={{ fontSize: '14px', fontWeight: '900', color: 'var(--gold-dark)', marginBottom: '8px' }}>김토스</div>
-            <div style={{ width: '100%', height: '100px', background: 'linear-gradient(to top, var(--gold-main), var(--gold-light))', borderRadius: '8px 8px 0 0', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '12px', fontWeight: 'bold', color: '#fff', fontSize: '16px' }}>
-              99점
-            </div>
-          </div>
-
-          {/* 3rd Place */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '24px', marginBottom: '4px' }}>🥉</div>
-            <div style={{ fontSize: '13px', fontWeight: 'bold', marginBottom: '8px' }}>박욜로</div>
-            <div style={{ width: '100%', height: '50px', background: 'linear-gradient(to top, #e5e8eb, #f2f4f6)', borderRadius: '8px 8px 0 0', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '8px', fontWeight: 'bold', color: 'var(--text-sub)' }}>
-              41점
-            </div>
-          </div>
-        </div>
-        
-        <p style={{ textAlign: 'center', fontSize: '13px', color: 'var(--text-sub)', marginTop: '20px' }}>
-          친구를 초대하고 내 랭킹을 올려보세요!
-        </p>
-      </div>
-
-      <div className="bottom-cta">
-        <button className="btn-primary" onClick={triggerFileInput}>
-          관상 분석 시작하기
         </button>
       </div>
 

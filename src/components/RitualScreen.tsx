@@ -42,8 +42,16 @@ export default function RitualScreen() {
   const [customTitle, setCustomTitle] = useState('');
   const [customFrequency, setCustomFrequency] = useState('매일');
   
+  const { addActionScore } = useUserStore();
+  
   const toggleRoutine = (id: number) => {
-    setRoutines(prev => prev.map(r => r.id === id ? { ...r, completed: !r.completed } : r));
+    setRoutines(prev => prev.map(r => {
+      if (r.id === id) {
+        if (!r.completed) addActionScore(5); // 완료 시 +5점
+        return { ...r, completed: !r.completed };
+      }
+      return r;
+    }));
   };
 
   const handleAddTemplate = (template: Routine) => {

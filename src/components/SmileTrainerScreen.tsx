@@ -6,7 +6,7 @@ import { useUserStore } from '../store/userStore';
 export default function SmileTrainerScreen() {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { faceScore, setFaceData, faceTraits } = useUserStore();
+  const { addActionScore } = useUserStore();
   const [phase, setPhase] = useState<'camera' | 'training' | 'success'>('camera');
   const [countdown, setCountdown] = useState(5);
 
@@ -54,11 +54,8 @@ export default function SmileTrainerScreen() {
 
   const handleSuccess = () => {
     setPhase('success');
-    // 스탯 상승 로직
-    setFaceData(
-      Math.min(100, faceScore + 50),
-      [...faceTraits, { part: 'mouth', score: 50, description: '관상 성형(미소)으로 극복한 자본주의 미소', x: 50, y: 75 }]
-    );
+    // 스탯 상승 로직 (코어 루프 연결)
+    addActionScore(10);
   };
 
   return (
@@ -103,8 +100,8 @@ export default function SmileTrainerScreen() {
               <div style={{ fontSize: '32px', fontWeight: '900', color: 'var(--toss-blue)', marginTop: '12px' }}>스탯 +50점 획득!</div>
             </div>
             
-            <button className="btn-primary" onClick={() => navigate('/result')} style={{ marginTop: '32px', width: '200px', backgroundColor: 'var(--gold-main)', color: '#111' }}>
-              결과 확인하러 가기
+            <button className="btn-primary" onClick={() => navigate('/')} style={{ marginTop: '32px', width: '200px', backgroundColor: 'var(--gold-main)', color: '#111' }}>
+              대시보드로 돌아가기
             </button>
           </div>
         )}

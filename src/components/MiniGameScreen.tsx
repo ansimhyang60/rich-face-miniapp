@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Coins, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Coins } from 'lucide-react';
+import { useUserStore } from '../store/userStore';
 
 type Entity = {
   id: number;
@@ -15,6 +16,7 @@ const TRASH_ICONS = ['🧾', '🗑️', '🩴', '💸', '💳', '☕', '🛒'];
 
 export default function MiniGameScreen() {
   const navigate = useNavigate();
+  const { addActionScore } = useUserStore();
   const [coinsCollected, setCoinsCollected] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -125,6 +127,7 @@ export default function MiniGameScreen() {
     if (hitCoin) {
       setCoinsCollected(prev => {
         const next = prev + 1;
+        addActionScore(1); // 전역 상태에 진짜 포인트 합산!
         if (next >= MAX_COINS) setGameOver(true);
         return next;
       });

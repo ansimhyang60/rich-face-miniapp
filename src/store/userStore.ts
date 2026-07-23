@@ -8,6 +8,7 @@ interface UserState {
   faceScore: number;
   faceTraits: any[];
   habitScore: number;
+  actionScore: number;
   addCredits: (amount: number) => void;
   useCredit: () => boolean;
   grantMyDataConsent: () => void;
@@ -15,6 +16,7 @@ interface UserState {
   setPhotoUrl: (url: string) => void;
   setFaceData: (score: number, traits: any[]) => void;
   setHabitScore: (score: number) => void;
+  addActionScore: (score: number) => void;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -25,6 +27,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   faceScore: 0,
   faceTraits: [],
   habitScore: 0,
+  actionScore: 0,
   
   addCredits: (amount) => set((state) => ({ credits: state.credits + amount })),
   
@@ -45,5 +48,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
   setFaceData: (score, traits) => set({ faceScore: score, faceTraits: traits }),
   
-  setHabitScore: (score) => set({ habitScore: score })
+  setHabitScore: (score) => set({ habitScore: score }),
+  
+  addActionScore: (score) => set((state) => ({ actionScore: state.actionScore + score }))
 }));

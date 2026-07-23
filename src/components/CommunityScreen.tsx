@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 export default function CommunityScreen() {
   const navigate = useNavigate();
-  const { faceScore, habitScore } = useUserStore();
-  const totalScore = Math.round((faceScore + habitScore) / 2);
+  const { faceScore, habitScore, actionScore } = useUserStore();
+  const totalScore = Math.round((faceScore + habitScore) / 2) + actionScore;
   
   // 50점 미만은 거지방, 50점 이상은 부자방으로 분기
   const isBeggar = totalScore < 50;
